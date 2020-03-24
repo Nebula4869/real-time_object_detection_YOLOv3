@@ -17,7 +17,7 @@ Real-time object detection using COCO-pretrained YOLOv3 model
    | [YOLOv3-spp](https://pjreddie.com/media/files/yolov3-spp.weights) | COCO trainval | test-dev | 60.6 | 141.45 Bn |
    | [YOLOv3-tiny](https://pjreddie.com/media/files/yolov3-tiny.weights) | COCO trainval | test-dev | 33.1 | 5.56 Bn   |
 
-2. run "convert_weights" to convert Darknet's .weights files into tensorflow's .ckpt files.
+2. Run "convert_weights" to convert Darknet's .weights files into tensorflow's .ckpt files.
 
-3. run "realtime_detection.py" to detect from image, video or camera.
+3. Run "realtime_detection.py" to detect from image, video or camera.
 
