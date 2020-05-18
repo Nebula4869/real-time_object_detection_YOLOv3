@@ -1,5 +1,6 @@
 from yolo_v3 import *
 import tensorflow as tf
+import time
 import cv2
 
 
@@ -68,17 +69,15 @@ def detect_from_video(video_path, model, model_file):
         saver.restore(sess, model_file)
 
         cap = cv2.VideoCapture(video_path)
-        timer = 0
-        scores, boxes, box_classes, img_h, img_w = None, None, None, None, None
         while True:
-            timer += 1
+            timer = time.time()
             _, frame = cap.read()
-            if timer % 5 == 0:
-                img_h, img_w, _ = frame.shape
-                img_resized = cv2.resize(frame, (INPUT_SIZE, INPUT_SIZE))
-                img_rgb = cv2.cvtColor(img_resized, cv2.COLOR_BGR2RGB)
-                img_in = img_rgb.reshape((1, INPUT_SIZE, INPUT_SIZE, 3)) / 255.
-                scores, boxes, box_classes = sess.run([scores_, boxes_, box_classes_], feed_dict={inputs: img_in})
+
+            img_h, img_w, _ = frame.shape
+            img_resized = cv2.resize(frame, (INPUT_SIZE, INPUT_SIZE))
+            img_rgb = cv2.cvtColor(img_resized, cv2.COLOR_BGR2RGB)
+            img_in = img_rgb.reshape((1, INPUT_SIZE, INPUT_SIZE, 3)) / 255.
+            scores, boxes, box_classes = sess.run([scores_, boxes_, box_classes_], feed_dict={inputs: img_in})
 
             if scores is not None:
                 for i in range(len(scores)):
@@ -96,11 +95,11 @@ def detect_from_video(video_path, model, model_file):
                     cv2.rectangle(frame, (left, top - 20), (right, top), (125, 125, 125), -1)
                     cv2.putText(frame, box_class + ' : %.2f' % score, (left + 5, top - 7),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-
+            print('Inference Time: %.4fs' % (time.time() - timer))
             cv2.imshow('YOLOv3 result', frame)
             cv2.waitKey(1)
 
 
 if __name__ == '__main__':
-    detect_from_image('test.jpg', yolo_v3, './yolov3/model.ckpt')
-    detect_from_video(0, yolo_v3, './yolov3/model.ckpt')
+    # detect_from_image('test.jpg', yolo_v3, './yolov3/model.ckpt')
+    detect_from_video(1, yolo_v3, './yolov3/model.ckpt')
