@@ -3,6 +3,9 @@ import tensorflow as tf
 import numpy as np
 
 
+NUM_CLASSES = 80
+
+
 def convert(model, weights_file, ckpt_file):
     f = open(weights_file, "rb")
     weights = np.fromfile(f, dtype=np.float32)
@@ -10,8 +13,8 @@ def convert(model, weights_file, ckpt_file):
     tf.reset_default_graph()
     with tf.variable_scope('detector'):
         inputs = tf.placeholder(tf.float32, [None, 416, 416, 3])
-        num_classes = 80
-        _ = model(inputs, num_classes)
+        
+        _ = model(inputs, NUM_CLASSES)
         var_list = tf.global_variables(scope='detector')
 
         ptr = 5
